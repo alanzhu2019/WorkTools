@@ -1,6 +1,0 @@
-com\alan\pojo\Scheduling.class
-com\alan\mapper\SchedulingMapper.class
-com\alan\servlet\Demo1Servlet.class
-com\alan\services\SchedulingService.class
-com\alan\util\SqlFactoryUtils.class
-com\alan\servlet\SelectSchedulingAllServlet.class
