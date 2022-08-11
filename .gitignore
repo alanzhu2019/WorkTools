@@ -1,5 +1,8 @@
 # Compiled class file
 *.class
+.ideal
+target
+*.iml
 
 # Log file
 *.log
