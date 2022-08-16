@@ -16,4 +16,8 @@
         SELECT * FROM scheduling WHERE rownum <![CDATA[<=]]> 10
     </select>
 
+    <delete id="deleteByCode">
+        delete from scheduling where code = #{code}
+    </delete>
+
 </mapper>

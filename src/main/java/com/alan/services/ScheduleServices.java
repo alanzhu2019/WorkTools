@@ -24,4 +24,10 @@ public interface ScheduleServices {
      * @param code
      */
     void updateByCode(String code);
+
+    /**
+     * 删除排程
+     * @param code
+     */
+    void deleteByCode(String code);
 }

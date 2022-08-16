@@ -14,4 +14,6 @@ public interface SchedulingMapper {
 
     void updateSchedulingByCode(String code);
 
+    void deleteByCode(String code);
+
 }

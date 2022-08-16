@@ -43,11 +43,6 @@
             </el-table-column>
             <el-table-column
                     align="center"
-                    prop="mo"
-                    label="订单">
-            </el-table-column>
-            <el-table-column
-                    align="center"
                     prop="charlinecode"
                     label="线体">
             </el-table-column>
@@ -56,15 +51,46 @@
                     prop="materialcode"
                     label="物料">
             </el-table-column>
+            <el-table-column
+                    align="center"
+                    prop="moqty"
+                    label="订单量">
+            </el-table-column>
+            <el-table-column
+                    align="center"
+                    prop="schedulingqty"
+                    label="排程量">
+            </el-table-column>
+            <el-table-column
+                    align="center"
+                    prop="inputqty"
+                    label="投入量">
+            </el-table-column>
+            <el-table-column
+                    align="center"
+                    prop="completeqty"
+                    label="产出量">
+            </el-table-column>
             <el-table-column label="操作">
-                <template slot-scope="scope">
+                <template slot-scope="{row}">
                     <el-button
                             size="mini"
-                            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button
-                            size="mini"
-                            type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            @click="">编辑</el-button>
+<!--                    <el-button-->
+<!--                            size="mini"-->
+<!--                            type="danger"-->
+<!--                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+
+                    <el-popconfirm
+                            title="确定要删除当前行吗？"
+                            @confirm="deleteCode(row)">
+                        <el-button
+                             size="mini"
+                             type="danger"
+                             slot="reference">
+                            删除</el-button>
+                    </el-popconfirm>
+
                 </template>
             </el-table-column>
         </el-table>
@@ -94,6 +120,32 @@
 
         },
         methods: {
+
+            //编辑
+            handleEdit(){
+
+            },
+
+            //删除
+            deleteCode(row){
+            let _this = this
+             axios({
+                 method: 'post',
+                 url: 'http://localhost/WorkTools/schedule/deleteByCode',
+                 data: row.code
+             }).then(function (resp) {
+                 if (resp.data == 'success'){
+                     _this.$message({
+                         message: '删除成功',
+                         type: 'success'
+                     });
+                     _this.loadTablData()
+                 }else {
+                     _this.$message.error('删除失败' + resp.data);
+                 }
+             })
+            },
+
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex % 2 === 0) {
                     return '';
@@ -106,17 +158,22 @@
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+            },
+
+            loadTablData(){
+                let _this = this
+                axios({
+                    method: "get",
+                    url: "http://localhost/WorkTools/schedule/selectAll"
+                }).then(function (resp) {
+                    _this.tableData = resp.data
+                })
             }
         },
 
+
         mounted(){
-            let _this = this
-            axios({
-                method: "get",
-                url: "http://localhost/WorkTools/schedule/selectAll"
-            }).then(function (resp) {
-                _this.tableData = resp.data
-            })
+            this.loadTablData()
         }
 
     })

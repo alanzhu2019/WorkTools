@@ -82,7 +82,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 73);
+/******/ 	return __webpack_require__(__webpack_require__.s = 75);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -210,7 +210,7 @@ module.exports = require("element-ui/lib/utils/clickoutside");
 
 /***/ }),
 
-/***/ 14:
+/***/ 15:
 /***/ (function(module, exports) {
 
 module.exports = require("element-ui/lib/scrollbar");
@@ -224,7 +224,7 @@ module.exports = require("element-ui/lib/utils/scroll-into-view");
 
 /***/ }),
 
-/***/ 33:
+/***/ 32:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -534,7 +534,9 @@ var NewPopper = {
     appendToBody: vue_popper_default.a.props.appendToBody,
     offset: vue_popper_default.a.props.offset,
     boundariesPadding: vue_popper_default.a.props.boundariesPadding,
-    arrowOffset: vue_popper_default.a.props.arrowOffset
+    arrowOffset: vue_popper_default.a.props.arrowOffset,
+    placement: vue_popper_default.a.props.placement,
+    transformOrigin: vue_popper_default.a.props.transformOrigin
   },
   methods: vue_popper_default.a.methods,
   data: function data() {
@@ -1379,14 +1381,14 @@ module.exports = require("vue");
 
 /***/ }),
 
-/***/ 73:
+/***/ 75:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./packages/date-picker/src/picker.vue + 4 modules
-var picker = __webpack_require__(33);
+var picker = __webpack_require__(32);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/date-picker/src/panel/time-select.vue?vue&type=template&id=51ab9320&
 var render = function() {
@@ -1463,7 +1465,7 @@ render._withStripped = true
 // CONCATENATED MODULE: ./packages/date-picker/src/panel/time-select.vue?vue&type=template&id=51ab9320&
 
 // EXTERNAL MODULE: external "element-ui/lib/scrollbar"
-var scrollbar_ = __webpack_require__(14);
+var scrollbar_ = __webpack_require__(15);
 var scrollbar_default = /*#__PURE__*/__webpack_require__.n(scrollbar_);
 
 // EXTERNAL MODULE: external "element-ui/lib/utils/scroll-into-view"

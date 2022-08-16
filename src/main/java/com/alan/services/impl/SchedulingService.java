@@ -38,6 +38,19 @@ public class SchedulingService implements ScheduleServices {
         sqlSession.close();
     }
 
+    @Override
+    public void deleteByCode(String code) {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+
+        SchedulingMapper mapper = sqlSession.getMapper(SchedulingMapper.class);
+
+        mapper.deleteByCode(code);
+
+        sqlSession.commit();
+        sqlSession.close();
+
+    }
+
     public List<Scheduling> selectAll(){
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
@@ -49,4 +62,6 @@ public class SchedulingService implements ScheduleServices {
 
         return schedulings;
     }
+
+
 }
