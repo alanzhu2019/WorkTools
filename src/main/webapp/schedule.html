@@ -6,9 +6,15 @@
     <!--引入vue.js-->
     <script src="js/vue.js"></script>
 
-    <!--引入 element js css-->
-    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
-    <script src="element-ui/lib/index.js"></script>
+<!--&lt;!&ndash;    引入 element js css&ndash;&gt;-->
+<!--    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">-->
+<!--    <script src="element-ui/lib/index.js"></script>-->
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui@2.15.9/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui@2.15.9/lib/index.js"></script>
+
     <script src="js/axios-0.18.0.js"></script>
     <style>
         .el-table .warning-row {
@@ -23,13 +29,31 @@
 <body>
 
 <div id="app">
+
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="排程">
+            <el-input v-model="formInline.code" placeholder="排程"></el-input>
+        </el-form-item>
+<!--        <el-form-item label="状态">-->
+<!--            <el-select v-model="formInline.region" placeholder="状态" required>-->
+<!--                <el-option label="草稿" value="0"></el-option>-->
+<!--                <el-option label="已发布" value="1"></el-option>-->
+<!--                <el-option label="生产中" value="2"></el-option>-->
+<!--                <el-option label="暂停" value="3"></el-option>-->
+<!--                <el-option label="已完工" value="4"></el-option>-->
+<!--                <el-option label="已删除" value="9"></el-option>-->
+<!--            </el-select>-->
+<!--        </el-form-item>-->
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+    </el-form>
+
     <template >
         <el-table
                 :data="tableData"
                 style="width: 100%"
                 :row-class-name="tableRowClassName"
-                highlight-current-row
-                @current-change="handleCurrentChange"
                 @selection-change="handleSelectionChange">
             <el-table-column
                     type="selection"
@@ -71,15 +95,28 @@
                     prop="completeqty"
                     label="产出量">
             </el-table-column>
+            <el-table-column
+                    align="center"
+                    prop="status"
+                    label="状态"
+                    >
+              <template slot-scope = "scope">
+                  {{scope.row.status | status}}
+              </template>
+
+            </el-table-column>
             <el-table-column label="操作">
+
                 <template slot-scope="{row}">
-                    <el-button
-                            size="mini"
-                            @click="">编辑</el-button>
-<!--                    <el-button-->
-<!--                            size="mini"-->
-<!--                            type="danger"-->
-<!--                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+                    <el-popconfirm
+                            title="确定要更新当前排程为已完工吗？"
+                            @confirm="updateCode(row)">
+                        <el-button
+                                size="mini"
+                                type="primary"
+                                slot="reference">
+                            已完工</el-button>
+                    </el-popconfirm>
 
                     <el-popconfirm
                             title="确定要删除当前行吗？"
@@ -87,7 +124,8 @@
                         <el-button
                              size="mini"
                              type="danger"
-                             slot="reference">
+                             slot="reference"
+                             >
                             删除</el-button>
                     </el-popconfirm>
 
@@ -95,6 +133,17 @@
             </el-table-column>
         </el-table>
     </template>
+
+<!--    分页-->
+    <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[5, 10, 15, 20]"
+            :page-size="5"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="totalCount">
+    </el-pagination>
 </div>
 
 
@@ -114,16 +163,70 @@
                 //     materialCode:'SA78D21306',
                 //
                 // }]
+
+                //总记录数
+                totalCount:100,
+                //当前页码
+                currentPage:1,
+                //每页数量
+                pageSize:5,
+
                 currentRow: null,
-                multipleSelection: []
+                multipleSelection: [],
+                //查询表单
+                formInline: {
+                    code: ''
+                }
             }
 
         },
+
+        filters:{
+            status(status){
+                if (status == 0){return "草稿"}
+                else if (status == 1){return "已发布"}
+                else if (status == 2){return "生产中"}
+                else if (status == 3){return "暂停"}
+                else if (status == 4){return "已完工"}
+                else if (status == 9){return "已删除"}
+            }
+        },
         methods: {
 
-            //编辑
-            handleEdit(){
+            //查询排程
+            onSubmit() {
+                console.log('submit!');
+                let _this = this
+                axios({
+                    method: 'post',
+                    url: 'http://localhost/WorkTools/schedule/selectSchedulingByCode',
+                    data: _this.formInline.code
+                }).then(function (resp) {
+                    _this.tableData = resp.data
+                })
 
+
+            },
+
+            //更新排程
+            updateCode(row){
+                let _this = this
+                axios({
+                    method: 'post',
+                    url: 'http://localhost/WorkTools/schedule/updateByCode',
+                    data: row.code
+                }).then(function (resp) {
+                    if (resp.data == 'success'){
+                        _this.$message({
+                            message: '更新成功',
+                            type: 'success'
+                        });
+                        _this.currentPage = 1
+                        _this.loadTablData()
+                    }else {
+                        _this.$message.error('更新失败' + resp.data);
+                    }
+                })
             },
 
             //删除
@@ -146,6 +249,18 @@
              })
             },
 
+            handleSizeChange(val) {
+                //console.log(`每页 ${val} 条`);
+                this.pageSize = val;
+                this.loadTablData();
+            },
+
+            handleCurrentChange(val) {
+                //console.log(`当前页: ${val}`);
+                this.currentPage = val;
+                this.loadTablData();
+            },
+
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex % 2 === 0) {
                     return '';
@@ -153,9 +268,7 @@
                     return 'success-row';
                 }
             },
-            handleCurrentChange(val) {
-                this.currentRow = val;
-            },
+
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -164,9 +277,11 @@
                 let _this = this
                 axios({
                     method: "get",
-                    url: "http://localhost/WorkTools/schedule/selectAll"
+                    url: "http://localhost/WorkTools/schedule/selectByPage?currentPage="+ _this.currentPage +"&pageSize=" + _this.pageSize
+                    //url: "http://localhost/WorkTools/schedule/selectAll"
                 }).then(function (resp) {
-                    _this.tableData = resp.data
+                    _this.tableData = resp.data.rows;
+                    _this.totalCount = resp.data.totalCount
                 })
             }
         },

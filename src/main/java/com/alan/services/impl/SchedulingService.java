@@ -1,6 +1,7 @@
 package com.alan.services.impl;
 
 import com.alan.mapper.SchedulingMapper;
+import com.alan.pojo.PageBean;
 import com.alan.pojo.Scheduling;
 import com.alan.services.ScheduleServices;
 import com.alan.util.SqlFactoryUtils;
@@ -48,6 +49,36 @@ public class SchedulingService implements ScheduleServices {
 
         sqlSession.commit();
         sqlSession.close();
+
+    }
+
+    @Override
+    public PageBean<Scheduling> selectByPage(int currentPage, int pageSize) {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+
+        SchedulingMapper mapper = sqlSession.getMapper(SchedulingMapper.class);
+
+        //到 当前页总数
+        int begin = currentPage * pageSize;
+
+        //到上一页总数
+        int size = (currentPage -1 ) * pageSize;
+
+        //查询当前页集合
+        List<Scheduling> rows = mapper.selectByPage(begin, size);
+
+        //查询总记录数
+        int totalCount = mapper.selectTotalCount();
+
+        PageBean<Scheduling> pageBean = new PageBean<>();
+
+        //封装pageBean对象
+        pageBean.setRows(rows);
+        pageBean.setTotalCount(totalCount);
+
+        sqlSession.close();
+
+        return pageBean;
 
     }
 

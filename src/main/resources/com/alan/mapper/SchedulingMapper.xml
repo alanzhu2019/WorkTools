@@ -6,7 +6,7 @@
 <mapper namespace="com.alan.mapper.SchedulingMapper">
 
     <update id="updateSchedulingByCode">
-        update scheduling set status = '4',REMARK = '手动设置已完工状态' where code = #{code}
+        update scheduling set status = '4',REMARK = '手动设置已完工状态',moditime = sysdate where code = #{code}
     </update>
 
     <select id="selectByCode" resultType="com.alan.pojo.Scheduling">
@@ -14,6 +14,12 @@
     </select>
     <select id="selectAll" resultType="com.alan.pojo.Scheduling">
         SELECT * FROM scheduling WHERE rownum <![CDATA[<=]]> 10
+    </select>
+    <select id="selectByPage" resultType="com.alan.pojo.Scheduling">
+        select a.* from ( select t.*,rownum rowno from SCHEDULING t where rownum <![CDATA[<=]]> #{begin} ) a where a.rowno > #{size}
+    </select>
+    <select id="selectTotalCount" resultType="java.lang.Integer">
+        select count(*) from scheduling
     </select>
 
     <delete id="deleteByCode">
