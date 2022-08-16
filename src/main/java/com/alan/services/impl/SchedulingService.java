@@ -1,14 +1,15 @@
-package com.alan.services;
+package com.alan.services.impl;
 
 import com.alan.mapper.SchedulingMapper;
 import com.alan.pojo.Scheduling;
+import com.alan.services.ScheduleServices;
 import com.alan.util.SqlFactoryUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import java.util.List;
 
-public class SchedulingService {
+public class SchedulingService implements ScheduleServices {
 
     private SqlSessionFactory sqlSessionFactory = SqlFactoryUtils.getSqlSessionFactory();
 
