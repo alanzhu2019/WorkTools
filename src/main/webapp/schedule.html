@@ -233,42 +233,42 @@
 
             //更新排程
             updateCode(row) {
-                let _this = this
+                //let _this = this
                 axios({
                     method: 'post',
                     url: 'http://localhost/WorkTools/schedule/updateByCode',
                     data: row.code
-                }).then(function (resp) {
+                }).then(resp=>{
                     if (resp.data == 'success') {
-                        _this.$message({
+                        this.$message({
                             message: '更新成功',
                             type: 'success'
                         });
-                        _this.formInline.code = null
-                        _this.loadTablData()
+                        this.formInline.code = null
+                        this.loadTablData()
                     } else {
-                        _this.$message.error('更新失败' + resp.data);
+                        this.$message.error('更新失败' + resp.data);
                     }
                 })
             },
 
             //删除
             deleteCode(row) {
-                let _this = this
+               // let _this = this
                 axios({
                     method: 'post',
                     url: 'http://localhost/WorkTools/schedule/deleteByCode',
                     data: row.code
-                }).then(function (resp) {
+                }).then(resp=>{
                     if (resp.data == 'success') {
-                        _this.$message({
+                        this.$message({
                             message: '删除成功',
                             type: 'success'
                         });
-                        _this.formInline.code = null
-                        _this.loadTablData()
+                        this.formInline.code = null
+                        this.loadTablData()
                     } else {
-                        _this.$message.error('删除失败' + resp.data);
+                        this.$message.error('删除失败' + resp.data);
                     }
                 })
             },
@@ -298,7 +298,6 @@
             },
 
             loadTablData() {
-                let _this = this
                 if (this.formInline.code){
                     this.currentPage = 1
                     this.pageSize = 5
@@ -307,9 +306,9 @@
                     method: "post",
                     url: "http://localhost/WorkTools/schedule/selectByPage?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
                     data:this.formInline
-                }).then(function (resp) {
-                    _this.tableData = resp.data.rows;
-                    _this.totalCount = resp.data.totalCount
+                }).then(resp=> {
+                    this.tableData = resp.data.rows;
+                    this.totalCount = resp.data.totalCount
                 })
             }
         },
