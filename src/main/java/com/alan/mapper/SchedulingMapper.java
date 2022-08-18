@@ -23,4 +23,11 @@ public interface SchedulingMapper {
     //查询总记录数
     int selectTotalCount();
 
+
+    //条件分页查询
+    List<Scheduling> selectByPageANDCondition(@Param("begin") int begin , @Param("size") int size,@Param("scheduling")Scheduling scheduling);
+
+
+    //条件查询总记录数
+    int selectConditionTotalCount(Scheduling scheduling);
 }

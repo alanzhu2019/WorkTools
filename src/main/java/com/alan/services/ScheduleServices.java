@@ -39,4 +39,13 @@ public interface ScheduleServices {
      * @return
      */
     PageBean<Scheduling> selectByPage(int currentPage,int pageSize);
+
+    /**
+     * 根据条件分页查询数据
+     * @param currentPage 当前页码
+     * @param pageSize   每页展示条数
+     * @param scheduling  传入的查询对象
+     * @return
+     */
+    PageBean<Scheduling> selectByPageAndCondition(int currentPage,int pageSize,Scheduling scheduling);
 }

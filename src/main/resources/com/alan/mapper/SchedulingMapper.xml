@@ -21,6 +21,38 @@
     <select id="selectTotalCount" resultType="java.lang.Integer">
         select count(*) from scheduling
     </select>
+    
+    
+    <select id="selectByPageANDCondition" resultType="com.alan.pojo.Scheduling">
+        select a.* from ( select t.*,rownum rowno from SCHEDULING t 
+        <where>
+            <if test="scheduling.code != null and scheduling.code != ''">
+                and t.code = #{scheduling.code}
+            </if>
+            <if test="scheduling.status != null and scheduling.status != ''">
+                and t.status = #{scheduling.status}
+            </if>
+            and  rownum <![CDATA[<=]]> #{begin}
+        </where>
+            ) a where a.rowno > #{size}
+
+
+
+    </select>
+    <select id="selectConditionTotalCount" resultType="java.lang.Integer">
+
+        select count (*)  from SCHEDULING t
+        <where>
+            <if test="code != null and code != '' ">
+                and t.code = #{code}
+            </if>
+            <if test="status != null and status != ''">
+                and t.status = #{status}
+            </if>
+        </where>
+
+    </select>
+
 
     <delete id="deleteByCode">
         delete from scheduling where code = #{code}

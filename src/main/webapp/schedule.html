@@ -6,9 +6,9 @@
     <!--引入vue.js-->
     <script src="js/vue.js"></script>
 
-<!--&lt;!&ndash;    引入 element js css&ndash;&gt;-->
-<!--    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">-->
-<!--    <script src="element-ui/lib/index.js"></script>-->
+    <!--&lt;!&ndash;    引入 element js css&ndash;&gt;-->
+    <!--    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">-->
+    <!--    <script src="element-ui/lib/index.js"></script>-->
 
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui@2.15.9/lib/theme-chalk/index.css">
@@ -32,24 +32,24 @@
 
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="排程">
-            <el-input v-model="formInline.code" placeholder="排程"></el-input>
+            <el-input v-model="formInline.code" placeholder="排程" clearable></el-input>
         </el-form-item>
-<!--        <el-form-item label="状态">-->
-<!--            <el-select v-model="formInline.region" placeholder="状态" required>-->
-<!--                <el-option label="草稿" value="0"></el-option>-->
-<!--                <el-option label="已发布" value="1"></el-option>-->
-<!--                <el-option label="生产中" value="2"></el-option>-->
-<!--                <el-option label="暂停" value="3"></el-option>-->
-<!--                <el-option label="已完工" value="4"></el-option>-->
-<!--                <el-option label="已删除" value="9"></el-option>-->
-<!--            </el-select>-->
-<!--        </el-form-item>-->
+                <el-form-item label="状态">
+                    <el-select v-model="formInline.status" placeholder="状态" clearable>
+                        <el-option label="草稿" value="0"></el-option>
+                        <el-option label="已发布" value="1"></el-option>
+                        <el-option label="生产中" value="2"></el-option>
+                        <el-option label="暂停" value="3"></el-option>
+                        <el-option label="已完工" value="4"></el-option>
+                        <el-option label="已删除" value="9"></el-option>
+                    </el-select>
+                </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button type="primary" @click="loadTablData">查询</el-button>
         </el-form-item>
     </el-form>
 
-    <template >
+    <template>
         <el-table
                 :data="tableData"
                 style="width: 100%"
@@ -99,10 +99,10 @@
                     align="center"
                     prop="status"
                     label="状态"
-                    >
-              <template slot-scope = "scope">
-                  {{scope.row.status | status}}
-              </template>
+            >
+                <template slot-scope="scope">
+                    {{scope.row.status | status}}
+                </template>
 
             </el-table-column>
             <el-table-column label="操作">
@@ -115,18 +115,20 @@
                                 size="mini"
                                 type="primary"
                                 slot="reference">
-                            已完工</el-button>
+                            已完工
+                        </el-button>
                     </el-popconfirm>
 
                     <el-popconfirm
                             title="确定要删除当前行吗？"
                             @confirm="deleteCode(row)">
                         <el-button
-                             size="mini"
-                             type="danger"
-                             slot="reference"
-                             >
-                            删除</el-button>
+                                size="mini"
+                                type="danger"
+                                slot="reference"
+                        >
+                            删除
+                        </el-button>
                     </el-popconfirm>
 
                 </template>
@@ -134,7 +136,7 @@
         </el-table>
     </template>
 
-<!--    分页-->
+    <!--    分页-->
     <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -165,88 +167,110 @@
                 // }]
 
                 //总记录数
-                totalCount:100,
+                totalCount: 100,
                 //当前页码
-                currentPage:1,
+                currentPage: 1,
                 //每页数量
-                pageSize:5,
+                pageSize: 5,
 
                 currentRow: null,
                 multipleSelection: [],
                 //查询表单
                 formInline: {
-                    code: ''
+                    code: '',
+                    status: ''
                 }
             }
 
         },
 
-        filters:{
-            status(status){
-                if (status == 0){return "草稿"}
-                else if (status == 1){return "已发布"}
-                else if (status == 2){return "生产中"}
-                else if (status == 3){return "暂停"}
-                else if (status == 4){return "已完工"}
-                else if (status == 9){return "已删除"}
+        filters: {
+            status(status) {
+                if (status == 0) {
+                    return "草稿"
+                } else if (status == 1) {
+                    return "已发布"
+                } else if (status == 2) {
+                    return "生产中"
+                } else if (status == 3) {
+                    return "暂停"
+                } else if (status == 4) {
+                    return "已完工"
+                } else if (status == 9) {
+                    return "已删除"
+                }
             }
         },
         methods: {
 
-            //查询排程
-            onSubmit() {
-                console.log('submit!');
-                let _this = this
-                axios({
-                    method: 'post',
-                    url: 'http://localhost/WorkTools/schedule/selectSchedulingByCode',
-                    data: _this.formInline.code
-                }).then(function (resp) {
-                    _this.tableData = resp.data
-                })
-
-
-            },
+            // //查询排程
+            // Submit1() {
+            //     var _this = this
+            //     let common_table_info = [];
+            //     axios({
+            //         method: 'post',
+            //         url: 'http://localhost/WorkTools/schedule/selectSchedulingByCode',
+            //         data: _this.formInline.code
+            //     }).then(function (resp) {
+            //         //_this.tableData = resp.data
+            //         _this.currentPage = 1
+            //         _this.pageSize = 1
+            //         _this.totalCount = 1
+            //
+            //         /**
+            //          * 这里需要将拿到的对象转为数组，进行赋值，这样才不会宝类型错误
+            //          */
+            //
+            //         common_table_info.push(resp.data);
+            //
+            //         _this.tableData = common_table_info;
+            //
+            //
+            //     })
+            //
+            //
+            // },
 
             //更新排程
-            updateCode(row){
+            updateCode(row) {
                 let _this = this
                 axios({
                     method: 'post',
                     url: 'http://localhost/WorkTools/schedule/updateByCode',
                     data: row.code
                 }).then(function (resp) {
-                    if (resp.data == 'success'){
+                    if (resp.data == 'success') {
                         _this.$message({
                             message: '更新成功',
                             type: 'success'
                         });
-                        _this.currentPage = 1
+                        _this.formInline.code = null
                         _this.loadTablData()
-                    }else {
+                    } else {
                         _this.$message.error('更新失败' + resp.data);
                     }
                 })
             },
 
             //删除
-            deleteCode(row){
-            let _this = this
-             axios({
-                 method: 'post',
-                 url: 'http://localhost/WorkTools/schedule/deleteByCode',
-                 data: row.code
-             }).then(function (resp) {
-                 if (resp.data == 'success'){
-                     _this.$message({
-                         message: '删除成功',
-                         type: 'success'
-                     });
-                     _this.loadTablData()
-                 }else {
-                     _this.$message.error('删除失败' + resp.data);
-                 }
-             })
+            deleteCode(row) {
+                let _this = this
+                axios({
+                    method: 'post',
+                    url: 'http://localhost/WorkTools/schedule/deleteByCode',
+                    data: row.code
+                }).then(function (resp) {
+                    if (resp.data == 'success') {
+                        _this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        _this.formInline.code = null
+                        _this.loadTablData()
+                    } else {
+                        _this.$message.error('删除失败' + resp.data);
+                    }
+                })
             },
 
             handleSizeChange(val) {
@@ -264,7 +288,7 @@
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex % 2 === 0) {
                     return '';
-                } else{
+                } else {
                     return 'success-row';
                 }
             },
@@ -273,12 +297,16 @@
                 this.multipleSelection = val;
             },
 
-            loadTablData(){
+            loadTablData() {
                 let _this = this
+                if (this.formInline.code){
+                    this.currentPage = 1
+                    this.pageSize = 5
+                }
                 axios({
-                    method: "get",
-                    url: "http://localhost/WorkTools/schedule/selectByPage?currentPage="+ _this.currentPage +"&pageSize=" + _this.pageSize
-                    //url: "http://localhost/WorkTools/schedule/selectAll"
+                    method: "post",
+                    url: "http://localhost/WorkTools/schedule/selectByPage?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
+                    data:this.formInline
                 }).then(function (resp) {
                     _this.tableData = resp.data.rows;
                     _this.totalCount = resp.data.totalCount
@@ -287,7 +315,7 @@
         },
 
 
-        mounted(){
+        mounted() {
             this.loadTablData()
         }
 

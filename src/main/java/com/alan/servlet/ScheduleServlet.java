@@ -44,7 +44,12 @@ public class ScheduleServlet extends BaseServlet {
         int currentPage = Integer.parseInt(_currentPage);
         int pageSize = Integer.parseInt(_pageSize);
 
-        PageBean<Scheduling> schedulingPageBean = schedulingService.selectByPage(currentPage, pageSize);
+        //获取请求体数据，拿到查询对象
+        BufferedReader reader = request.getReader();
+        String s = reader.readLine();
+        Scheduling scheduling = JSON.parseObject(s, Scheduling.class);
+
+        PageBean<Scheduling> schedulingPageBean = schedulingService.selectByPageAndCondition(currentPage, pageSize,scheduling);
 
         //转换为JSON数据
         String toJSONSchedulings = JSON.toJSONString(schedulingPageBean);

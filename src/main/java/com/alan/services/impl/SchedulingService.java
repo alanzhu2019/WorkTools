@@ -82,6 +82,36 @@ public class SchedulingService implements ScheduleServices {
 
     }
 
+
+    @Override
+    public PageBean<Scheduling> selectByPageAndCondition(int currentPage, int pageSize,Scheduling scheduling) {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+
+        SchedulingMapper mapper = sqlSession.getMapper(SchedulingMapper.class);
+
+        //到 当前页总数
+        int begin = currentPage * pageSize;
+
+        //到上一页总数
+        int size = (currentPage -1 ) * pageSize;
+
+        //查询当前页集合
+        List<Scheduling> rows = mapper.selectByPageANDCondition(begin, size,scheduling);
+
+        //查询总记录数
+        int totalCount = mapper.selectConditionTotalCount(scheduling);
+
+        PageBean<Scheduling> pageBean = new PageBean<>();
+
+        //封装pageBean对象
+        pageBean.setRows(rows);
+        pageBean.setTotalCount(totalCount);
+
+        sqlSession.close();
+
+        return pageBean;
+    }
+
     public List<Scheduling> selectAll(){
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
